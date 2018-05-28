@@ -1,0 +1,14 @@
+/* Estilo CSS criado por Diego */
+
+header { height: 80px; margin:0;}
+header img { max-height: 100%; }
+header nav { background-color: #23313f; }
+section { padding:60px 0; }
+.navbar {height: 80px; }
+#subNav { height:30px; background-color:#18bc9c; }
+footer { background-color: #111; min-height: 50px; color:#e4e4e4; padding:30px 30px; }
+#pos_footer { background-color:#000; text-align: center; color:#ccc; padding:10px; font-size: 10px; }
+#menu { text-align: right; margin-top: 30px; }
+#menu a { color:#fff; font-weight: bold; text-decoration: none; }
+#menu span { padding:30px; }
+#menu span:hover { background-color:#18bc9c; }

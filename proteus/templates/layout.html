@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}" sizes="32x32" type="image/png"/>
+    <title>Proteus | {% block title %}{% endblock %}</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Theme CSS -->
+    <link href="{% static 'css/proteus.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <!--Custom CSS-->
+    {% block custom_css %}{% endblock %}
+    <!-- Custom Fonts -->
+    <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body id="page-top" class="index">
+<div id="skipnav"><a href="#maincontent">Skip to main content</a></div>
+    <body id="page-top" class="index">
+    <header>
+        <nav class="navbar navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+
+                   <a href="{% url 'index' %}"><img height="80px" src="{% static 'img/proteus_logo.svg' %}"></a>
+
+                </div>
+
+                <div id="menu">
+                    <span><a href="{% url 'index' %}">New project</a></span>
+                    <span><a target="_blank" href="{% static 'data/documentation.pdf' %}">Documentation</a></span>
+                    <span><a href="#" data-toggle="modal" data-target="#about">About</a></span>
+                    <span><a href="#" data-toggle="modal" data-target="#help">Help</a></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div id="subNav">
+        <div class="container"><img src="{% static 'img/tools.png' %}"><strong>Create a new project</strong></div>
+    </div>
+
+    <div class="container">
+          <div calss="row">
+            {% for message in get_flashed_messages %}
+            <div class="col-md-12 alert bg-warning msg" role="alert">
+                <p class="text-center">
+                    <strong>{{ message }}</strong>
+                </p>
+            </div>
+            {% endfor %}
+      </div>
+    </div>
+    {% block content %}
+    {% endblock %}
+
+<footer>
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Laboratório de Bioinformática e Sistemas (LBS)</strong></p>
+                <p style="font-size: 12px"><strong>Universidade Federal de Minas Gerais</strong> <br>Av. Pres. Antônio Carlos, 6627 - Pampulha, Belo Horizonte - MG, 31270-901 </p>
+                <p style="font-size: 12px">Instituto de Ciências Exatas (ICEx), Departamento de Ciência da Computação (DCC)</p>
+                <p style="font-size: 12px">Anexo U, 4º andar, Sala: 4340 | Telefone +55 31 3409-5896</p>
+            </div>
+            <div class="col-md-6 right">
+                <br>
+                <div style="float:right; margin-bottom:20px"><a target="_blank" alt="DCC" href="http://dcc.ufmg.br"><img src="{% static 'img/dcc.png' %}"></a></div>
+                <div style="float:right; margin-bottom:20px"><a target="_blank" alt="UFMG" href="http://ufmg.br"><img src="{% static 'img/ufmg.png' %}"></a></div>
+                <div style="clear:both"></div>
+
+            </div>
+        </div>
+
+    </div>
+
+</footer>
+<div id="pos_footer">
+    ©2018 LBS | Created by <a href="#" data-toggle="modal" data-target="#about">LBS team</a>.
+</div>
+
+<!-- MODAL -->
+<div class="modal fade" tabindex="-1" id="about" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3><strong>About</strong></h3>
+            </div>
+
+            <div class="modal-body">
+                <div style="text-align: center">
+                    <img height="80px" src="{% static 'img/proteus_footer.png' %}">
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <p style="text-align:center"><img src="{% static 'img/logo3.svg' %}"></p>
+                    </div>
+
+                    <div class="col-md-8">
+                        <p style="padding-top:10px">
+                            <strong>Projected by: </strong>Prof. Dr. Raquel de Melo-Minardi / Prof. Dr. Ronaldo Alves Pinto Nagem<br>
+                            <strong>Back-end: </strong>José Renato<br>
+                            <strong>Front-end: </strong>Diego Mariano<br>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- MODAL HELP -->
+<div class="modal fade" tabindex="-1" id="help" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><strong>HELP</strong></h4>
+
+            </div>
+
+            <div class="modal-body">
+                <a href="http://proteus.dcc.ufmg.br/result/3c494085">Result example</a>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+</body>
+</html>

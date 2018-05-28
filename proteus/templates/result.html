@@ -1,0 +1,176 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+
+{% block title%} {{ block.super }} Result {% endblock %}
+
+{% block custom_css %}
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
+    <link href="{% static 'js/angularjs/ui-bootstrap-custom-build/ui-bootstrap-custom-1.1.1-csp.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<div ng-app="proEngApp">
+    <div ng-controller="proEngController">
+
+        <div style="background-color:#e4e4e4; height:180px; margin-bottom: 20px">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9 col-xs-12">
+                        <h2 class="title_h2">{{title}}</h2>
+                        <!--<p>{{subtitle}} &#8491;</p>-->
+                        <p><strong><a href='[[linkacess]]'>[[linkacess]]</a> </strong></p>
+                    </div>
+
+                    <div class="col-md-3 col-xs-12" style="height: 180px; background-color: #00bc9e; color:#fff">
+                        <p style="text-align: center; font-size: 90px; padding-top:10px">
+                            <strong id="mutations_found_title">[[mutationsfound]]</strong>
+                        </p>
+
+                        <p style="font-size: 12px; text-align:center; margin-top: -20px">
+                            pairs of mutations were found
+                            <a href="#" data-toggle="modal" data-target="#help" style="color:#fff"><span class="glyphicon glyphicon-info-sign"></span></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div calss="row">
+                {% for message in get_flashed_messages %}
+                <div class="col-md-12 alert bg-warning msg" role="alert">
+                    <p class="text-center">
+                        <strong>{{ message }}</strong>
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="row">
+                <div class="col-md-9" ng-if="cttlok">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-condensed table-hover">
+                            <thead>
+                            <tr>
+                                <th>Sites</th>
+                                <th>Mutation suggested</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr onmouseover="selectID(glviewer,this.children[0].innerHTML)" ng-repeat="cttl in contactsList">
+
+                                    <td>[[cttl.site]]</td>
+
+                                    <td>
+                                        <ul class="list-inline">
+                                            <li ng-repeat="ctm in cttl.mutations">
+                                                <a href="" ng-click="scrollTo([[ctm.link]])">[[ctm.mutation]]</a>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <hr>
+
+                    <h2> Details</h2>
+                    <div class="table-responsive" ng-repeat="ctt in contacts" id="[[ctt.id]]">
+                        <h4 class="sub-header">[[ctt.title]]</h4>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Residues</th>
+                                <th>New residues</th>
+                                <th>Origin PDB</th>
+                                <th>Chain</th>
+                                <th>R1</th>
+                                <th>R2</th>
+                                <th>Score (RMSD)</th>
+                                <th title="Stereochemical clash?">Clash</th>
+                                <th title="&Delta;&Delta;G">&Delta;&Delta;G</th>
+                                <th>Preview</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="ctr in ctt.contacts" id="[[ctr.pdbid]][[ctr.r1]][[ctr.r2]]">
+                                    <td>[[ctt.title]]</td>
+                                    <td>[[ctr.type]]</td>
+                                    <td>
+                                        <a href="http://www.rcsb.org/pdb/explore.do?structureId=[[ctr.pdbid]]" target="_blank">
+                                        [[ctr.pdbid]]
+                                        </a>
+                                    </td>
+                                    <td>[[ctr.chain]]</td>
+                                    <td>[[ctr.r1]]</td>
+                                    <td>[[ctr.r2]]</td>
+                                    <td>[[ctr.score]]</td>
+                                    <td>[[ctr.clash]]</td>
+                                    <td>[[ctr.ddg]]</td>
+                                    <td> <button type="button" class="btn btn-primary" ng-click="show([[ctr.alid]], [[ctt.title]], [[ctr.r1]], [[ctr.r2]], 1)">Show</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+
+                    <style>.affix{ top: 20px; z-index: 9999 !important; }</style>
+
+                    <div data-spy="affix" id="affix" data-offset-top="240" data-offset-bottom="250">
+                        <div id="pdb" style="height: 400px; width: 280px"></div>
+                            <p style="color:#ccc; text-align: right">Wild protein</p>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <script type="text/ng-template" id="myModalContent.html">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            Wild <span class='text-success'>[[wild]]</span> (green) |  Suggested mutations <span class='text-primary'>[[mutation]]</span> (blue)
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div ng-if="alignok" class="modal-body alert-danger">
+                            <p>Error!</p>
+                        </div>
+
+                        <div id="showaligncontent" class='mol-container'></div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-success" type="button" ng-click="show([[idal]], [[w]], [[m1]], [[m2]])">Remove side chain</button>
+                        <a href="[[download]]" class="btn btn-primary" type="button">Download</a>
+                        <button class="btn btn-danger" type="button" ng-click="cancel()">Close</button>
+                    </div>
+                </script>
+
+
+
+                <script src="{% static 'js/angularjs/1.4.9/angular.min.js' %}"></script>
+                <script src="{% static 'js/angularjs/ui-bootstrap-custom-build/ui-bootstrap-custom-1.1.1.min.js' %}"></script>
+                <script src="{% static 'js/angularjs/ui-bootstrap-custom-build/ui-bootstrap-custom-tpls-1.1.1.min.js' %}"></script>
+                <script src="{% static 'js/jquery/1.12.4/jquery.min.js' %}"></script>
+                <script src="{% static 'js/bootstrap.min.js' %}"></script>
+                <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+                <script src="{% static 'js/3Dmol-min.js' %}"></script>
+                <script src="{% static 'js/proeng.js' %}"></script>
+
+            <div class="col-md-12 alert alert-warning msg" role="alert">
+                <p class="text-center">
+                    <strong>You can access this page any time using this link: <a href='[[linkacess]]'>[[linkacess]]</a> </strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
