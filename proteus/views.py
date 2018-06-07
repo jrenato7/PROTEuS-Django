@@ -5,14 +5,21 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from proteus.models import Processing, Contact, Align
+from proteus.forms import UploadFileForm, upload
+import pprint
 
 
 @csrf_protect
 def index(request):
-
-    context = {}
-
-    return render(request, 'index.html', context)
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            #pprint.pprint(request.POST)
+            upload(request.FILES['pdbfile'])
+            #return HttpResponseRedirect('/success/url/')
+    else:
+        form = UploadFileForm()
+    return render(request, 'index.html', {'form': form})
 
 
 @csrf_protect

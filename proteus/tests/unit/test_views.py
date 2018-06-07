@@ -16,8 +16,12 @@ class IndexViewTestCase(TestCase):
     def test_template_used(self):
         self.assertTemplateUsed(self.response, 'index.html')
 
+    # def test_form(self):
+
+
 class ResultViewTestCase(TestCase):
     pass
+
 
 class ProcessViewTestCase(TestCase):
 

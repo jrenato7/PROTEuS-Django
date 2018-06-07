@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+{% load widget_tweaks %}
 {% block title %} {{ block.super }} PROTein Engineering Supporter {% endblock %}
 {% block content %}
 
@@ -9,8 +10,52 @@
             <div class="row">
                 <div class="col-lg-12">
 
-                    <p>oi</p>
+                    {% if form.is_multipart %}
+                        <form enctype="multipart/form-data" method="post" action="">
+                    {% else %}
+                        <form method="post" action="">
+                    {% endif %}
+                        {% csrf_token %}
+                        <span class="btn btn-primary"><span class="badge badge-pill badge-light">1</span> Select a PDB File</span>
+                            Upload a structure (.pdb):
 
+                            {% render_field form.pdbfile style='margin: 10px 0;' class='form-control' %}<br>
+
+                             <span class="btn btn-primary"><span class="badge badge-pill badge-light">2</span> Select a chain</span>
+
+                            [A, B, C ... Z]
+                            {% render_field form.chain style="margin:10px 0" class="form-control" placeholder="A" %}
+                            <!--<input style="margin:10px 0" type="text" id="chain" name="chain" class="form-control" placeholder="A">-->
+                            <br /><br />
+
+
+                            <span class="btn btn-primary"><span class="badge badge-pill badge-light">3</span> Select a residue</span>
+
+                            Proteus will collect all residues at the distance of 10 Å:
+                            <!--<input style="margin:10px 0" type="text" id="residue" name="residue" class="form-control" placeholder="E167">-->
+                            {% render_field form.residue style="margin:10px 0" class="form-control" placeholder="E167" %}
+                            <div class="form-check">
+                                <!--<input type="checkbox" id="all_residues" name='all_residues'>-->
+                                {% render_field form.all_residues %}
+                                <span>Run for all residues of the chain (not recommended).</span>
+                            </div>
+
+                            <br><br>
+
+                            <!-- Cutoff padrao: 0.5 -->
+                            <input id="cutoff" name="cutoff" type="hidden" value="0.5">
+
+                            <span class="btn btn-primary"><span class="badge badge-pill badge-light">4</span> Contact</span>
+
+                            Insert your e-mail address if you want to be contacted when your job has finished (optional):
+                            <br>
+                            {% render_field form.name  class="form-control" placeholder="Name" style="margin:10px 0" %}
+
+                            {% render_field form.email class="form-control" placeholder="Email" style="margin:10px 0" %}
+                            <div><button type="submit" class="btn btn-primary form-control">
+                                Calculate
+                            </button></div>
+                        </form>
                 </div>
             </div>
         </div>
