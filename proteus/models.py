@@ -3,13 +3,16 @@
 #   * Rearrange models' order
 #   * Make sure each model has one field with primary_key=True
 #   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
-#   * Remove `` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
+#   * Remove `` lines if you wish to allow Django to create, modify, and delete
+# the table
+# Feel free to rename the models, but don't rename db_table values or field
+# names.
 
 from __future__ import unicode_literals
 
 from django.db import models
 from django.urls import reverse
+from .generate_contacts import GenerateContactsPdbFile
 
 
 class User(models.Model):
@@ -113,3 +116,33 @@ class AtomAlign(models.Model):
 
     class Meta:
         db_table = 'atom_align'
+
+
+def validated_data(data):
+    # file = data.files['pdbfile']
+    user = get_user(form.name.data, form.email.data)
+    user_id = user.id_u
+    filename = secure_filename(file.filename)
+    fs = os.path.join(up_f, filename)
+    file.save(fs)
+    cutoff = form.cutoff.data
+    pdb_name = filename.split('.')[0]
+    url = generate_url(pdb_name + str(cutoff) + str(user_id))
+    prc = Processing(user_id, pdb_name, cutoff, url)
+    db_session.add(prc)
+    db_session.commit()
+    if not form.all_residues:
+        residue = get_residue_info(form.residue.data)
+        #  definimos o raio padrão para 10A.
+        ray = 10
+        residues_in_ray = cut_pdb(fs, residue[0], residue[1],
+                                  form.chain.data, ray)
+    else:
+        residues_in_ray = []
+    gc = GenerateContactsPdbFile(fs, chain=form.chain.data,
+                                 residues_in_ray=residues_in_ray)
+    for m in gc.messages:
+        flash(m)
+    store_contacts(gc, prc.id_p)
+    send_mail_process_start(mail, user.email, user.name, prc.url,
+                            prc.pdbid, prc.cutoff, request.url)
