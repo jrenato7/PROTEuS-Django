@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
+from six import string_types
 from scipy.spatial import distance
 from Bio.PDB import PDBParser
 from Bio.PDB import NeighborSearch
@@ -19,7 +20,7 @@ class GenerateContactsPdbFile:
         self.pdb_file = self.parser_pdb(pdb_file)
         self.nsize = neighborhood_size
         self.chain = chain
-        self.residues_in_ray = map(lambda x: int(x), residues_in_ray)
+        self.residues_in_ray = list(map(lambda x: int(x), residues_in_ray))
         self.messages = []
 
         # Residues with neighborhood measure equal to neighborhood_size
@@ -90,7 +91,7 @@ class GenerateContactsPdbFile:
             if c.id == self.chain:
                 self.chain = c
                 break
-        if isinstance(self.chain, basestring):
+        if isinstance(self.chain, string_types):
             msg = 'Chain {} not found! We used the model 0 instead.'
             self.messages.append(msg.format(self.chain))
             self.chain = self.pdb_file[0]

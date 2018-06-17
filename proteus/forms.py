@@ -47,10 +47,11 @@ def allowed_file(filename):
 
 
 def upload(pdb_f):
-    with open(os.path.join(settings.MEDIA_ROOT, pdb_f.name),
-              'wb+') as destination:
+    arq = os.path.join(settings.MEDIA_ROOT, pdb_f.name)
+    with open(arq, 'wb+') as destination:
         for chunk in pdb_f.chunks():
             destination.write(chunk)
+    return arq
 
 
 def verify_pdbfile(files):
